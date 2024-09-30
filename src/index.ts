@@ -17,6 +17,7 @@ import {
   evaluateFilePath,
   FileType,
   DirectoryStructure,
+  syncDirStucture,
   TranslatableFile,
 } from './util/file-system';
 import { matcherMap } from './matchers';
@@ -147,6 +148,13 @@ const translate = async (
     templateFilePath,
     fileType,
     withArrays,
+  );
+
+  syncDirStucture(
+    templateFiles,
+    templateFilePath,
+    cacheDir,
+    targetLanguages
   );
 
   if (templateFiles.length === 0) {

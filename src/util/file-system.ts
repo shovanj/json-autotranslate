@@ -41,13 +41,40 @@ export const detectFileType = (json: any): FileType => {
   return invalidKeys.length > 0 ? 'natural' : 'key-based';
 };
 
+export const syncDirStucture = (
+  templateFiles: TranslatableFile[],
+  directory: string,
+  cacheDir: string,
+  targetLanguages: string[]
+) => {
+  const templateDirs = templateFiles
+    .map((templateFile) => templateFile.name)
+    .map((item) => require('path').dirname(item))
+
+  targetLanguages.forEach((language) => {
+    templateDirs.forEach((source) => {
+      const sourceLocation = path.resolve(directory, source)
+      const targetLocation = sourceLocation.replace('/en/', `/${language}/`)
+      const cacheLocation  = `${process.cwd()}/${cacheDir}/${language}/${source}`
+
+      if (fs.statSync(sourceLocation).isDirectory()) {
+	[targetLocation, cacheLocation].forEach((dir) => {
+	  if (!fs.existsSync(dir)){
+	    fs.mkdirSync(dir, { recursive: true });
+	  }
+	})
+      }
+    })
+  })
+}
+
 export const loadTranslations = (
   directory: string,
   fileType: FileType = 'auto',
   withArrays = false,
 ) =>
   fs
-    .readdirSync(directory)
+    .readdirSync(directory, { recursive: true })
     .filter((f) => f.endsWith('.json'))
     .map((f) => {
       const json = require(path.resolve(directory, f));
