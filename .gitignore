@@ -11,9 +11,6 @@ pids
 *.seed
 *.pid.lock
 
-# Build output
-lib/
-
 # Secrets
 service-account.json
 

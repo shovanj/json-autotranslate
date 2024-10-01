@@ -74,6 +74,7 @@ export const loadTranslations = (
   withArrays = false,
 ) =>
   fs
+    // @ts-ignore
     .readdirSync(directory, { recursive: true })
     .filter((f) => f.endsWith('.json'))
     .map((f) => {
